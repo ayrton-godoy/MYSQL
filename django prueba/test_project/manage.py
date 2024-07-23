@@ -20,3 +20,35 @@ def main():
 
 if __name__ == '__main__':
     main()
+
+
+    from django.db import models
+
+class Usuario(models.Model):
+    nombre = models.CharField(max_length=100)
+    email = models.EmailField(unique=True)
+    telefono = models.CharField(max_length=20, blank=True, null=True)
+    
+    def __str__(self):
+        return self.nombre
+    class Servicio(models.Model):
+    nombre = models.CharField(max_length=100)
+    descripcion = models.TextField(blank=True, null=True)
+    
+    def __str__(self):
+        return self.nombre
+    
+    class Turno(models.Model):
+    ESTADO_CHOICES = (
+        ('pendiente', 'Pendiente'),
+        ('confirmado', 'Confirmado'),
+        ('cancelado', 'Cancelado'),
+    )
+    
+    usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE)
+    servicio = models.ForeignKey(Servicio, on_delete=models.CASCADE)
+    fecha_hora = models.DateTimeField()
+    estado = models.CharField(max_length=20, choices=ESTADO_CHOICES, default='pendiente')
+    
+    def __str__(self):
+        return f"{self.usuario.nombre} - {self.servicio.nombre} - {self.fecha_hora}"
